@@ -59,36 +59,6 @@ public class RegistroCompraVentaService
         return resultados.ToDictionary(x => x.estado, x => x.parsed);
     }
 
-    //public async Task<Dictionary<string, JsonElement>> GetResumen(
-    //    string rutEmisor,
-    //    DateOnly periodo,
-    //    string operacion,
-    //    CancellationToken token = default
-    //)
-    //{
-    //    await _authenticator.AutenticarAsync("https://palena.sii.cl/cgi_dte/UPL/DTEauth?1");
-    //    string? siiToken = _tokenProvider.ObtenerToken();
-    //    HttpClient client = _httpClientFactory.CreateClient("SII");
-    //    (string rut, string dv) = ParseRut(rutEmisor);
-    //    string[] estados =
-    //        operacion == "VENTA" ? ["REGISTRO"] : ["REGISTRO", "RECLAMADO", "PENDIENTE"];
-    //    Dictionary<string, JsonElement> resultados = [];
-    //    foreach (string estado in estados)
-    //    {
-    //        object payload = BuildPayload(rut, dv, periodo, siiToken, estado, operacion);
-    //        HttpResponseMessage response = await client.PostAsJsonAsync(
-    //            EndPointResumen,
-    //            payload,
-    //            cancellationToken: token
-    //        );
-    //        response.EnsureSuccessStatusCode();
-    //        string raw = await response.Content.ReadAsStringAsync(token);
-    //        JsonElement parsed = JsonSerializer.Deserialize<JsonElement>(raw);
-    //        resultados[estado] = parsed;
-    //    }
-    //    return resultados;
-    //}
-
     private static (string Rut, string Dv) ParseRut(string rutEmisor)
     {
         string[] parts = rutEmisor.Split('-');

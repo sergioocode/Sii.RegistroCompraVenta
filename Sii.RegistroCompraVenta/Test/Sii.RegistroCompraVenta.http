@@ -2,12 +2,12 @@
 
 @Sii_RegistroCompraVenta_HostAddress = http://localhost:5225
 
-GET {{Sii_RegistroCompraVenta_HostAddress}}/api/RegistroCompraVenta/resumen?rut=76470584-K&anio=2025&mes=3&operacion=compra
+GET {{Sii_RegistroCompraVenta_HostAddress}}/api/RegistroCompraVenta/resumen?rut=76470584-K&year=2025&mes=3&operacion=compra
 Accept: application/json
 
 ###
 
 @Sii_RegistroCompraVenta_HostAddress = http://localhost:5225
 
-GET {{Sii_RegistroCompraVenta_HostAddress}}/api/RegistroCompraVenta/resumen?rut=76470584-K&anio=2025&mes=3&operacion=venta
+GET {{Sii_RegistroCompraVenta_HostAddress}}/api/RegistroCompraVenta/resumen?rut=76470584-K&year=2025&mes=3&operacion=venta
 Accept: application/json

@@ -55,7 +55,7 @@ public class RegistroCompraVenta : Controller
             return "El parámetro 'rut' es obligatorio y debe tener el formato ########-X.";
 
         if (anio is null || mes is null)
-            return "Debe especificar los parámetros 'anio' y 'mes'.";
+            return "Debe especificar los parámetros 'year' y 'mes'.";
 
         DateOnly periodo;
         try
