@@ -23,10 +23,8 @@ public class RegistroCompraVenta : Controller
     )]
     [HttpGet("resumen")]
     public async Task<IActionResult> GetResumen(
-        [SwaggerParameter("RUT del emisor en formato ########-X (ej: 11222333-8)")]
-        [FromQuery]
-            string? rut,
-        [SwaggerParameter("Año del período tributario. Mínimo: 2023")] [FromQuery] int? year,
+        [SwaggerParameter("RUT del emisor (ej: 76217288-7)")] [FromQuery] string? rut,
+        [SwaggerParameter("Año del período tributario")] [FromQuery] int? year,
         [SwaggerParameter("Mes del período tributario. Valores de 1 a 12.")] [FromQuery] int? mes,
         [SwaggerParameter("Tipo de operación: COMPRA o VENTA.")] [FromQuery] string? operacion,
         CancellationToken ct = default

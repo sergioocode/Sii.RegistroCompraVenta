@@ -34,14 +34,11 @@ public class RegistroCompraVentaService
     )
     {
         await _authenticator.AutenticarAsync("https://palena.sii.cl/cgi_dte/UPL/DTEauth?1");
-
         string? siiToken = _tokenProvider.ObtenerToken();
         HttpClient client = _httpClientFactory.CreateClient("SII");
-
         (string rut, string dv) = ParseRut(rutEmisor);
         string[] estados =
             operacion == "VENTA" ? ["REGISTRO"] : ["REGISTRO", "RECLAMADO", "PENDIENTE"];
-
         IEnumerable<Task<(string estado, JsonElement parsed)>> tareas = estados.Select(
             async estado =>
             {
@@ -58,9 +55,7 @@ public class RegistroCompraVentaService
                 return (estado, parsed);
             }
         );
-
         (string estado, JsonElement parsed)[] resultados = await Task.WhenAll(tareas);
-
         return resultados.ToDictionary(x => x.estado, x => x.parsed);
     }
 
