@@ -20,6 +20,15 @@ This solution allows you to query the **Registro de Compras y Ventas** from Chil
 
 ---
 
+### 📋 Requirements
+
+This project requires the following to run successfully:
+
+* A **valid digital certificate (.pfx)** issued for SII services
+* An **Azure Storage Account** or a local Blob Storage emulator like **Azurite** to store the certificate file.
+
+---
+
 ### 🚀 Usage
 
 Once the app is running, you can query purchases or sales:
@@ -35,6 +44,13 @@ curl -X GET "http://localhost:5200/api/RegistroCompraVenta/resumen?rut=11222333-
 - `operacion`: `COMPRA` or `VENTA`
 
 The result is grouped by document state: `REGISTRO`, `RECLAMADO`, `PENDIENTE`.
+
+<p align="center">
+  <img src="https://img001.prntscr.com/file/img001/uVo-DLcPQSKZFc9fUfT6og.png" width="100%" />
+</p>
+
+
+
 
 ---
 
