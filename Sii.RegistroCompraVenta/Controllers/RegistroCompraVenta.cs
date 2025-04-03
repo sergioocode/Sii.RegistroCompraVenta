@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using Sii.RegistroCompraVenta.Services;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Sii.RegistroCompraVenta.Controllers;
 
@@ -9,23 +10,29 @@ namespace Sii.RegistroCompraVenta.Controllers;
 [Route("api/RegistroCompraVenta")]
 public class RegistroCompraVenta : Controller
 {
-    private readonly LibroCompraServie libroCompra;
+    private readonly RegistroCompraVentaService libroCompra;
 
-    public RegistroCompraVenta(LibroCompraServie libroCompra)
+    public RegistroCompraVenta(RegistroCompraVentaService libroCompra)
     {
         this.libroCompra = libroCompra;
     }
 
+    [SwaggerOperation(
+        Summary = "Obtiene el resumen del libro de compras o ventas",
+        Description = "Devuelve información agrupada por estado contable (REGISTRO, RECLAMADO, PENDIENTE)."
+    )]
     [HttpGet("resumen")]
     public async Task<IActionResult> GetResumen(
-        [FromQuery] string? rut,
-        [FromQuery] int? anio,
-        [FromQuery] int? mes,
-        [FromQuery] string? operacion,
+        [SwaggerParameter("RUT del emisor en formato ########-X (ej: 11222333-8)")]
+        [FromQuery]
+            string? rut,
+        [SwaggerParameter("Año del período tributario. Mínimo: 2023")] [FromQuery] int? year,
+        [SwaggerParameter("Mes del período tributario. Valores de 1 a 12.")] [FromQuery] int? mes,
+        [SwaggerParameter("Tipo de operación: COMPRA o VENTA.")] [FromQuery] string? operacion,
         CancellationToken ct = default
     )
     {
-        object validacion = ValidarParametros(rut, anio, mes, operacion);
+        object validacion = ValidarParametros(rut, year, mes, operacion);
         if (validacion is string error)
             return BadRequest(error);
 

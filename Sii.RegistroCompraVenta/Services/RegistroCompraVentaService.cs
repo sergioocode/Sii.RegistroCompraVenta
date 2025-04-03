@@ -4,7 +4,7 @@ using Sii.RegistroCompraVenta.Helper;
 
 namespace Sii.RegistroCompraVenta.Services;
 
-public class LibroCompraServie
+public class RegistroCompraVentaService
 {
     private const string NamespaceResumen =
         "cl.sii.sdi.lob.diii.consdcv.data.api.interfaces.FacadeService/getResumen";
@@ -15,7 +15,7 @@ public class LibroCompraServie
     private readonly SiiAuthenticator _authenticator;
     private readonly SiiTokenProvider _tokenProvider;
 
-    public LibroCompraServie(
+    public RegistroCompraVentaService(
         IHttpClientFactory httpClientFactory,
         SiiAuthenticator authenticator,
         SiiTokenProvider tokenProvider

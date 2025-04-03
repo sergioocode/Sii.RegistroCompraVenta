@@ -8,7 +8,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<DigitalCertLoader>();
 builder.Services.AddSingleton<SiiAuthenticator>();
 builder.Services.AddSingleton<SiiTokenProvider>();
-builder.Services.AddSingleton<LibroCompraServie>();
+builder.Services.AddSingleton<RegistroCompraVentaService>();
 
 builder.Services.AddAzureClients(clientBuilder =>
 {
@@ -34,8 +34,14 @@ builder
     });
 
 builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "Sii.RegistroCompraVenta", Version = "v1" });
+    c.EnableAnnotations();
+});
+
 WebApplication app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
