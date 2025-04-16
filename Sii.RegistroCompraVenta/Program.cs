@@ -8,7 +8,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<DigitalCertLoader>();
 builder.Services.AddSingleton<SiiAuthenticator>();
 builder.Services.AddSingleton<SiiTokenProvider>();
-builder.Services.AddSingleton<RegistroCompraVentaService>();
+builder.Services.AddSingleton<LibroResumenService>();
 
 builder.Services.AddAzureClients(clientBuilder =>
 {

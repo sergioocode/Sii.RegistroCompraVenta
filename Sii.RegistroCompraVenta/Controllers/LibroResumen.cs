@@ -8,11 +8,11 @@ namespace Sii.RegistroCompraVenta.Controllers;
 
 [ApiController]
 [Route("api/RegistroCompraVenta")]
-public class RegistroCompraVenta : Controller
+public class LibroResumen : Controller
 {
-    private readonly RegistroCompraVentaService libroCompra;
+    private readonly LibroResumenService libroCompra;
 
-    public RegistroCompraVenta(RegistroCompraVentaService libroCompra)
+    public LibroResumen(LibroResumenService libroCompra)
     {
         this.libroCompra = libroCompra;
     }
@@ -40,16 +40,27 @@ public class RegistroCompraVenta : Controller
             string
         ))validacion;
 
-        Dictionary<string, JsonElement> data = await libroCompra.GetResumen(
-            rutOk,
-            periodoOk,
-            operacionOk,
-            ct
-        );
-        return Ok(data);
+        try
+        {
+            Dictionary<string, JsonElement> data = await libroCompra.GetResumen(
+                rutOk,
+                periodoOk,
+                operacionOk,
+                ct
+            );
+            return Ok(data);
+        }
+        catch (HttpRequestException ex)
+        {
+            return StatusCode(503, $"Error de conexión con SII: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Error inesperado: {ex.Message}");
+        }
     }
 
-    private object ValidarParametros(string? rut, int? anio, int? mes, string? operacion)
+    private static object ValidarParametros(string? rut, int? anio, int? mes, string? operacion)
     {
         if (string.IsNullOrWhiteSpace(rut) || !Regex.IsMatch(rut, @"^\d{7,8}-[0-9kK]$"))
             return "El parámetro 'rut' es obligatorio y debe tener el formato ########-X.";

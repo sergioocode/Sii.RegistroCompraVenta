@@ -1,4 +1,6 @@
-﻿namespace Sii.RegistroCompraVenta.Helper;
+﻿using System.Net;
+
+namespace Sii.RegistroCompraVenta.Helper;
 
 public class SiiAuthenticator
 {
@@ -22,7 +24,17 @@ public class SiiAuthenticator
                 [new KeyValuePair<string, string>("referencia", referenciaUrl)]
             )
         );
-        response.EnsureSuccessStatusCode();
+        if (response.StatusCode == HttpStatusCode.Found)
+        {
+            throw new Exception(
+                "El SII respondió con redirección (302). Puede deberse a un problema con el certificado o sesión expirada."
+            );
+        }
+        else if (!response.IsSuccessStatusCode)
+        {
+            string msg = await response.Content.ReadAsStringAsync();
+            throw new Exception($"Error HTTP {response.StatusCode}: {msg}");
+        }
         _isAuthenticated = true;
     }
 }

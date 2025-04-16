@@ -1,4 +1,4 @@
-#
+###
 
 @Sii_RegistroCompraVenta_HostAddress = http://localhost:5225
 
@@ -11,3 +11,6 @@ Accept: application/json
 
 GET {{Sii_RegistroCompraVenta_HostAddress}}/api/RegistroCompraVenta/resumen?rut=76470584-K&year=2025&mes=3&operacion=venta
 Accept: application/json
+
+
+### Please: dotnet dev-certs https --trust
