@@ -1,38 +1,36 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using Azure.Storage.Blobs;
 
 namespace Sii.RegistroCompraVenta.Helper;
 
 public class DigitalCertLoader
 {
-    private readonly IConfiguration _config;
-    private readonly BlobServiceClient _blobClient;
-
-    public DigitalCertLoader(IConfiguration config, BlobServiceClient blobClient)
+    public static async Task<HttpClientHandler> LoadCertificateAsync(IConfiguration config)
     {
-        _config = config;
-        _blobClient = blobClient;
-    }
-
-    public async Task<X509Certificate2> LoadCertificateAsync()
-    {
+        string connectionString = config["StorageConnection"]!;
+        string containerName = config["StorageConnection:containerName"]!;
+        string blobName = config["StorageConnection:blobName"]!;
+        string password = config["StorageConnection:certPassword"]!;
         try
         {
-            string containerName = _config.GetValue<string>("StorageConnection:containerName")!;
-            string blobName = _config.GetValue<string>("StorageConnection:blobName")!;
-            string password = _config.GetValue<string>("StorageConnection:certPassword")!;
-
-            BlobContainerClient containerClient = _blobClient.GetBlobContainerClient(containerName);
-            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+            BlobServiceClient blobClient = new(connectionString);
+            BlobContainerClient containerClient = blobClient.GetBlobContainerClient(containerName);
+            BlobClient blob = containerClient.GetBlobClient(blobName);
 
             using MemoryStream ms = new();
-            await blobClient.DownloadToAsync(ms);
+            await blob.DownloadToAsync(ms);
 
-            return new X509Certificate2(ms.ToArray(), password, X509KeyStorageFlags.MachineKeySet);
+            X509Certificate2 cert = new(ms.ToArray(), password, X509KeyStorageFlags.Exportable);
+
+            CookieContainer cookieContainer = new();
+            HttpClientHandler handler = new() { CookieContainer = cookieContainer };
+            handler.ClientCertificates.Add(cert);
+            return handler;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            throw new Exception($"Error al cargar el certificado digital: {ex.Message}", ex);
+            throw;
         }
     }
 }

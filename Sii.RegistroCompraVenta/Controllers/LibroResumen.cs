@@ -26,8 +26,7 @@ public class LibroResumen : Controller
         [SwaggerParameter("RUT del emisor (ej: 76217288-7)")] [FromQuery] string? rut,
         [SwaggerParameter("Año del período tributario")] [FromQuery] int? year,
         [SwaggerParameter("Mes del período tributario. Valores de 1 a 12.")] [FromQuery] int? mes,
-        [SwaggerParameter("Tipo de operación: COMPRA o VENTA.")] [FromQuery] string? operacion,
-        CancellationToken ct = default
+        [SwaggerParameter("Tipo de operación: COMPRA o VENTA.")] [FromQuery] string? operacion
     )
     {
         object validacion = ValidarParametros(rut, year, mes, operacion);
@@ -45,8 +44,7 @@ public class LibroResumen : Controller
             Dictionary<string, JsonElement> data = await libroCompra.GetResumen(
                 rutOk,
                 periodoOk,
-                operacionOk,
-                ct
+                operacionOk
             );
             return Ok(data);
         }

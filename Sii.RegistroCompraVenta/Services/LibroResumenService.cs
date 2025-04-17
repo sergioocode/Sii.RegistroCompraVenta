@@ -13,32 +13,24 @@ public class LibroResumenService
 
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly SiiAuthenticator _authenticator;
-    private readonly SiiTokenProvider _tokenProvider;
-
+    private const string UrlAuth = "https://palena.sii.cl/cgi_dte/UPL/DTEauth?1";
     private const string _clientName = "SII";
 
-    public LibroResumenService(
-        IHttpClientFactory httpClientFactory,
-        SiiAuthenticator authenticator,
-        SiiTokenProvider tokenProvider
-    )
+    public LibroResumenService(IHttpClientFactory httpClientFactory, SiiAuthenticator authenticator)
     {
         _httpClientFactory = httpClientFactory;
         _authenticator = authenticator;
-        _tokenProvider = tokenProvider;
     }
 
     public async Task<Dictionary<string, JsonElement>> GetResumen(
         string rutEmisor,
         DateOnly periodo,
-        string operacion,
-        CancellationToken token = default
+        string operacion
     )
     {
         try
         {
-            await _authenticator.AutenticarAsync("https://palena.sii.cl/cgi_dte/UPL/DTEauth?1");
-            string? siiToken = _tokenProvider.ObtenerToken();
+            string siiToken = await _authenticator.AutenticarAsync(UrlAuth);
             HttpClient client = _httpClientFactory.CreateClient(_clientName);
             (string rut, string dv) = ParseRut(rutEmisor);
             string[] estados =
@@ -49,12 +41,11 @@ public class LibroResumenService
                     object payload = BuildPayload(rut, dv, periodo, siiToken, estado, operacion);
                     HttpResponseMessage response = await client.PostAsJsonAsync(
                         EndPointResumen,
-                        payload,
-                        cancellationToken: token
+                        payload
                     );
                     response.EnsureSuccessStatusCode();
 
-                    string raw = await response.Content.ReadAsStringAsync(token);
+                    string raw = await response.Content.ReadAsStringAsync();
                     JsonElement parsed = JsonSerializer.Deserialize<JsonElement>(raw);
                     return (estado, parsed);
                 }
